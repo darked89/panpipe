@@ -17,7 +17,7 @@
 # *- bash -*
 
 # INCLUDE BASH LIBRARY
-. ${panpipe_bindir}/panpipe_lib || exit 1
+. "${panpipe_bindir}"/panpipe_lib || exit 1
 
 ########
 print_desc()
@@ -75,7 +75,7 @@ check_pars()
         echo "Error! -m parameter not given!" >&2
         exit 1
     else
-        if [ ! -f ${module_fname} ]; then
+        if [ ! -f "${module_fname}" ]; then
             echo "Error! module file does not exist" >&2 
             exit 1
         fi
@@ -92,12 +92,12 @@ get_step_doc_funcnames()
 obtain_info_for_module()
 {
     # Load module
-    source ${module_fname}
+    source "${module_fname}"
 
     # Iterate over step documentation functions
     while read step_doc_func; do
         local stepname=${step_doc_func%"_document"}
-        document_step ${stepname} ${showopts_given}
+        document_step "${stepname}" ${showopts_given}
     done < <(get_step_doc_funcnames)
 }
 

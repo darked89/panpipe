@@ -402,14 +402,14 @@ move_dir()
 {
     local pipeline_outd=$1
     local outd=$2    
-    destdir=`get_dest_dir_for_ppl ${pipeline_outd} ${outd}`
+    destdir=`get_dest_dir_for_ppl ${pipeline_outd} "${outd}"`
     
     # Move directory
-    if [ -d ${destdir} ]; then
+    if [ -d "${destdir}" ]; then
         echo "Error: ${destdir} exists" >&2
         return 1
     else
-        mv ${pipeline_outd} ${outd} || return 1
+        mv "${pipeline_outd}" "${outd}" || return 1
     fi
 }
  
@@ -423,7 +423,7 @@ update_active_pipeline()
     local pipe_exec_cmd=${PIPELINE_COMMANDS[${pipeline_outd}]}
 
     # Check pipeline status
-    get_ppl_status "${pipe_exec_cmd}" ${outd}
+    get_ppl_status "${pipe_exec_cmd}" "${outd}"
     local exit_code=$?
     
     case $exit_code in
@@ -431,7 +431,7 @@ update_active_pipeline()
                                  return 1
                                  ;;
         ${PPL_IS_COMPLETED}) echo "Pipeline stored in ${pipeline_outd} has completed execution" >&2
-                             unset PIPELINE_COMMANDS[${pipeline_outd}]
+                             unset PIPELINE_COMMANDS["${pipeline_outd}"]
                              ;;
         ${PPL_REQUIRES_POST_FINISH_ACTIONS}) echo "Pipeline stored in ${pipeline_outd} has post-finish actions pending" >&2
                                            ;;
@@ -448,7 +448,7 @@ update_active_pipelines()
     
     # Iterate over active pipelines
     for pipeline_outd in "${!PIPELINE_COMMANDS[@]}"; do
-        update_active_pipeline ${pipeline_outd} ${outd} || return 1
+        update_active_pipeline "${pipeline_outd}" "${outd}" || return 1
     done
 
     local num_active_pipelines=${#PIPELINE_COMMANDS[@]}
@@ -459,7 +459,7 @@ update_active_pipelines()
 extract_outd_from_command()
 {
     local cmd=$1
-    echo `read_opt_value_from_line "${cmd}" "--outdir"`
+    echo $(read_opt_value_from_line "${cmd}" "--outdir")
 }
 
 ########
@@ -468,10 +468,10 @@ add_cmd_to_assoc_array()
     local cmd=$1
 
     # Extract output directory from command
-    local dir=`extract_outd_from_command "${cmd}"`
+    local dir=$(extract_outd_from_command "${cmd}")
 
     # Add command to associative array if directory was sucessfully retrieved
-    if [ ${dir} = ${OPT_NOT_FOUND} ]; then
+    if [ "${dir}" = "${OPT_NOT_FOUND}" ]; then
         return 1
     else
         PIPELINE_COMMANDS[${dir}]=${cmd}
@@ -499,13 +499,13 @@ execute_batches()
 
         # Execute built-in tilde expansion to avoid problems with "~"
         # symbol in file and directory paths
-        pipe_exec_cmd=`expand_tildes "${pipe_exec_cmd}"`
+        pipe_exec_cmd=$(expand_tildes "${pipe_exec_cmd}")
         
         echo "* Processing line ${lineno}..." >&2
         echo "" >&2
         
         echo "** Wait until number of simultaneous executions is below the given maximum..." >&2
-        wait_simul_exec_reduction ${maxp} || return 1
+        wait_simul_exec_reduction "${maxp}" || return 1
         echo "" >&2
             
         echo "** Update array of active pipelines..." >&2
@@ -513,7 +513,7 @@ execute_batches()
         echo "" >&2
 
         echo "** Check if pipeline already completed execution..." >&2
-        get_ppl_status "${pipe_exec_cmd}" ${outd}
+        get_ppl_status "${pipe_exec_cmd}" "${outd}"
         local exit_code=$?
         case $exit_code in
             ${PPL_HAS_WRONG_OUTDIR}) echo "Error: pipeline command does not contain --outdir option">&2
@@ -537,7 +537,7 @@ execute_batches()
         if [ ${exit_code} -eq ${PPL_IS_NOT_COMPLETED} -o ${exit_code} -eq ${PPL_FAILED} ]; then
             echo "**********************" >&2
             echo "** Execute pipeline..." >&2
-            echo ${pipe_exec_cmd} >&2
+            echo "${pipe_exec_cmd}" >&2
             ${pipe_exec_cmd} || return 1
             echo "**********************" >&2
             echo "" >&2
@@ -550,7 +550,7 @@ execute_batches()
         # Increase lineno
         lineno=$((lineno+1))
         
-    done < ${file}
+    done < "${file}"
 
     # Wait for all pipelines to complete
     echo "* Waiting for pending pipelines to complete..." >&2
@@ -564,7 +564,7 @@ execute_batches()
 
     # Check if there are active pipelines
     local num_active_pipelines=${#PIPELINE_COMMANDS[@]}
-    if [ ${num_active_pipelines} -eq 0 ]; then
+    if [ "${num_active_pipelines}" -eq 0 ]; then
         echo "All pipelines successfully completed execution" >&2
         echo "" >&2
     else

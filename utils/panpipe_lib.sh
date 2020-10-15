@@ -3783,11 +3783,11 @@ get_abs_yml_fname()
     local yml_fname=$1
     
     # Search module in directories listed in PANPIPE_YML_DIR
-    local PANPIPE_YML_DIR_BLANKS=`replace_str_elem_sep_with_blank "," ${PANPIPE_YML_DIR}`
+    local PANPIPE_YML_DIR_BLANKS=`replace_str_elem_sep_with_blank "," "${PANPIPE_YML_DIR}"`
     local dir
     local abs_yml_fname
     for dir in ${PANPIPE_YML_DIR_BLANKS}; do
-        if [ -f ${dir}/${yml_fname} ]; then
+        if [ -f "${dir}"/"${yml_fname}" ]; then
             abs_yml_fname=${dir}/${yml_fname}
             break
         fi
@@ -3795,9 +3795,9 @@ get_abs_yml_fname()
     
     # Fallback to panpipe yml package
     if [ -z "${abs_yml_fname}" ]; then
-        panpipe_yml_dir=`get_panpipe_yml_dir`
+        panpipe_yml_dir=$(get_panpipe_yml_dir)
         abs_yml_fname=${panpipe_yml_dir}/${yml_fname}
     fi
 
-    echo ${abs_yml_fname}
+    echo "${abs_yml_fname}"
 }

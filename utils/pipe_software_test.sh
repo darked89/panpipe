@@ -73,10 +73,10 @@ step_a_define_opts()
 step_a()
 {
     # Initialize variables
-    local sleep_time=`read_opt_value_from_line "$*" "-a"`
+    local sleep_time=$(read_opt_value_from_line "$*" "-a")
 
     # sleep some time
-    sleep ${sleep_time}
+    sleep "${sleep_time}"
 }
 
 ########
@@ -105,10 +105,10 @@ step_b_define_opts()
     define_cmdline_opt "$cmdline" "-b" optlist || exit 1
 
     # Get absolute name of shared directory
-    abs_shrdir=`get_absolute_shdirname "data"`
+    abs_shrdir=$(get_absolute_shdirname "data")
 
     # Define option for FIFO
-    define_opt "-datadir" ${abs_shrdir} optlist || exit 1
+    define_opt "-datadir" "${abs_shrdir}" optlist || exit 1
 
     # Save option list
     save_opt_list optlist
@@ -118,14 +118,14 @@ step_b_define_opts()
 step_b()
 {
     # Initialize variables
-    local value=`read_opt_value_from_line "$*" "-b"`
-    local datadir=`read_opt_value_from_line "$*" "-datadir"`
+    local value=$(read_opt_value_from_line "$*" "-b")
+    local datadir=$(read_opt_value_from_line "$*" "-datadir")
 
     # sleep some time
     sleep 10
 
     # Write value to file
-    echo "$value" > ${datadir}/step_b.out
+    echo "$value" > "${datadir}"/step_b.out
 }
 
 ########
@@ -154,8 +154,8 @@ step_c_define_opts()
     define_cmdline_opt "$cmdline" "-c" optlist || exit 1
 
     # Define the -step-outd option, the output directory for the step
-    local step_outd=`get_step_outdir_given_stepspec "$stepspec"`
-    define_opt "-step-outd" ${step_outd} optlist || exit 1
+    local step_outd=$(get_step_outdir_given_stepspec "$stepspec")
+    define_opt "-step-outd" "${step_outd}" optlist || exit 1
 
     # Save option list so as to execute step four times
     for id in 1 2 3 4; do
@@ -169,18 +169,18 @@ step_c_define_opts()
 step_c()
 {
     # Initialize variables
-    local sleep_time=`read_opt_value_from_line "$*" "-c"`
-    local step_outd=`read_opt_value_from_line "$*" "-step-outd"`
-    local id=`read_opt_value_from_line "$*" "-id"`
+    local sleep_time=$(read_opt_value_from_line "$*" "-c")
+    local step_outd=$(read_opt_value_from_line "$*" "-step-outd")
+    local id=$(read_opt_value_from_line "$*" "-id")
 
     # create auxiliary file
-    touch ${step_outd}/${id}_aux
+    touch "${step_outd}"/"${id}"_aux
 
     # sleep some time
-    sleep ${sleep_time}
+    sleep "${sleep_time}"
     
     # create file
-    touch ${step_outd}/$id
+    touch "${step_outd}"/"$id"
 }
 
 ########
@@ -189,11 +189,11 @@ step_c_post()
     logmsg "Cleaning directory..."
     
     # Initialize variables
-    local step_outd=`read_opt_value_from_line "$*" "-step-outd"`
-    local id=`read_opt_value_from_line "$*" "-id"`
+    local step_outd=$(read_opt_value_from_line "$*" "-step-outd")
+    local id=$(read_opt_value_from_line "$*" "-id")
 
     # Remove auxiliary file
-    rm ${step_outd}/${id}_aux    
+    rm "${step_outd}"/"${id}"_aux    
 
     logmsg "Cleaning finished"
 }
@@ -202,11 +202,11 @@ step_c_post()
 step_c_reset_outdir()
 {
     # Initialize variables
-    local step_outd=`read_opt_value_from_line "$*" "-step-outd"`
-    local id=`read_opt_value_from_line "$*" "-id"`
+    local step_outd=$(read_opt_value_from_line "$*" "-step-outd")
+    local id=$(read_opt_value_from_line "$*" "-id")
 
     # create auxiliary file
-    rm -f ${step_outd}/${id}*
+    rm -f "${step_outd}"/"${id}"*
 }
 
 ########
@@ -230,10 +230,10 @@ step_d_define_opts()
     local optlist=""
 
     # Get absolute name of FIFO
-    abs_fifoname=`get_absolute_fifoname "step_d_fifo"`
+    abs_fifoname=$(get_absolute_fifoname "step_d_fifo")
 
     # Define option for FIFO
-    define_opt "-fifo" ${abs_fifoname} optlist || exit 1
+    define_opt "-fifo" "${abs_fifoname}" optlist || exit 1
         
     # Save option list
     save_opt_list optlist
@@ -243,10 +243,10 @@ step_d_define_opts()
 step_d()
 {
     # Initialize variables
-    local fifo=`read_opt_value_from_line "$*" "-fifo"`
+    local fifo=$(read_opt_value_from_line "$*" "-fifo")
 
     # Write string to FIFO
-    echo "Hello World" > ${fifo}
+    echo "Hello World" > "${fifo}"
     
     # sleep some time
     sleep 10
@@ -273,10 +273,10 @@ step_e_define_opts()
     local optlist=""
     
     # Get absolute name of FIFO
-    abs_fifoname=`get_absolute_fifoname "step_d_fifo"`
+    abs_fifoname=$(get_absolute_fifoname "step_d_fifo")
 
     # Define option for FIFO
-    define_opt "-fifo" ${abs_fifoname} optlist || exit 1
+    define_opt "-fifo" "${abs_fifoname}" optlist || exit 1
         
     # Save option list
     save_opt_list optlist
@@ -286,10 +286,10 @@ step_e_define_opts()
 step_e()
 {
     # Initialize variables
-    local fifo=`read_opt_value_from_line "$*" "-fifo"`
+    local fifo=$(read_opt_value_from_line "$*" "-fifo")
 
     # Write string to FIFO
-    cat < ${fifo}
+    cat < "${fifo}"
     
     # sleep some time
     sleep 10
@@ -316,8 +316,8 @@ step_f_define_opts()
     local optlist=""
 
     # Define the -step-outd option, the output directory for the step
-    local step_outd=`get_step_outdir_given_stepspec "$stepspec"`
-    define_opt "-step-outd" ${step_outd} optlist || exit 1
+    local step_outd=$(get_step_outdir_given_stepspec "$stepspec")
+    define_opt "-step-outd" "${step_outd}" optlist || exit 1
         
     # Save option list
     save_opt_list optlist
@@ -327,13 +327,13 @@ step_f_define_opts()
 step_f()
 {
     # Initialize variables
-    local step_outd=`read_opt_value_from_line "$*" "-step-outd"`
+    local step_outd=$(read_opt_value_from_line "$*" "-step-outd")
 
     # Activate conda environment
     conda activate py27
 
     # Write string to FIFO
-    python --version > ${step_outd}/python_ver.txt 2>&1
+    python --version > "${step_outd}"/python_ver.txt 2>&1
 
     # Deactivate conda environment
     conda deactivate
@@ -369,8 +369,8 @@ step_g_define_opts()
     local optlist=""
 
     # Define the -step-outd option, the output directory for the step
-    local step_outd=`get_step_outdir_given_stepspec "$stepspec"`
-    define_opt "-step-outd" ${step_outd} optlist || exit 1
+    local step_outd=$(get_step_outdir_given_stepspec "$stepspec")
+    define_opt "-step-outd" "${step_outd}" optlist || exit 1
 
     # Save option list so as to execute step four times
     for id in 1 2 3 4; do
@@ -384,17 +384,17 @@ step_g_define_opts()
 step_g()
 {
     # Initialize variables
-    local step_outd=`read_opt_value_from_line "$*" "-step-outd"`
-    local id=`read_opt_value_from_line "$*" "-id"`
+    local step_outd=$(read_opt_value_from_line "$*" "-step-outd")
+    local id=$(read_opt_value_from_line "$*" "-id")
 
     # create auxiliary file
-    touch ${step_outd}/${id}_aux
+    touch "${step_outd}"/"${id}"_aux
 
     # sleep some time
     sleep 10
     
     # create file
-    touch ${step_outd}/$id
+    touch "${step_outd}"/"$id"
 }
 
 ########
@@ -403,11 +403,11 @@ step_g_post()
     logmsg "Cleaning directory..."
     
     # Initialize variables
-    local step_outd=`read_opt_value_from_line "$*" "-step-outd"`
-    local id=`read_opt_value_from_line "$*" "-id"`
+    local step_outd=$(read_opt_value_from_line "$*" "-step-outd")
+    local id=$(read_opt_value_from_line "$*" "-id")
 
     # Remove auxiliary file
-    rm ${step_outd}/${id}_aux    
+    rm "${step_outd}"/"${id}"_aux    
 
     logmsg "Cleaning finished"
 }
@@ -438,10 +438,10 @@ step_h_define_opts()
     define_cmdline_opt "$cmdline" "-h" optlist || exit 1
 
     # Get absolute name of shared directory
-    abs_shrdir=`get_absolute_shdirname "data"`
+    abs_shrdir=$(get_absolute_shdirname "data")
 
     # Define option for FIFO
-    define_opt "-datadir" ${abs_shrdir} optlist || exit 1
+    define_opt "-datadir" "${abs_shrdir}" optlist || exit 1
 
     # Save option list
     save_opt_list optlist
@@ -451,12 +451,12 @@ step_h_define_opts()
 step_h()
 {
     # Initialize variables
-    local value=`read_opt_value_from_line "$*" "-h"`
-    local datadir=`read_opt_value_from_line "$*" "-datadir"`
+    local value=$(read_opt_value_from_line "$*" "-h")
+    local datadir=$(read_opt_value_from_line "$*" "-datadir")
 
     # sleep some time
     sleep 10
 
     # Write value to file
-    echo "$value" > ${datadir}/step_h.out
+    echo "$value" > "${datadir}"/step_h.out
 }

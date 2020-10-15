@@ -833,7 +833,7 @@ debug_step()
     echo "STEP: ${stepname} ; STATUS: ${status} ; STEPSPEC: ${stepspec}" >&2
 
     ## Obtain step options
-    local define_opts_funcname=`get_define_opts_funcname ${stepname}`
+    local define_opts_funcname=`get_define_opts_funcname "${stepname}"`
     ${define_opts_funcname} "${cmdline}" "${stepspec}" || return 1
 }
 
@@ -853,15 +853,15 @@ execute_pipeline_steps_debug()
     # Read information about the steps to be executed
     local stepspec
     while read stepspec; do
-        local stepspec_comment=`pipeline_stepspec_is_comment "$stepspec"`
-        local stepspec_ok=`pipeline_stepspec_is_ok "$stepspec"`
-        if [ ${stepspec_comment} = "no" -a ${stepspec_ok} = "yes" ]; then
+        local stepspec_comment=$(pipeline_stepspec_is_comment "$stepspec")
+        local stepspec_ok=$(pipeline_stepspec_is_ok "$stepspec")
+        if [ "${stepspec_comment}" = "no" -a "${stepspec_ok}" = "yes" ]; then
             # Extract step name
-            local stepname=`extract_stepname_from_stepspec "$stepspec"`
+            local stepname=$(extract_stepname_from_stepspec "$stepspec")
 
-            debug_step "${cmdline}" ${dirname} ${stepname} "${stepspec}" || return 1                
+            debug_step "${cmdline}" "${dirname}" "${stepname}" "${stepspec}" || return 1                
         fi
-    done < ${pfile}
+    done < "${pfile}"
 
     echo "" >&2
 }
@@ -891,25 +891,25 @@ absolutize_file_paths || exit 1
 check_pipeline_file || exit 1
 
 reordered_pfile=${outd}/${REORDERED_PIPELINE_BASENAME}
-reorder_pipeline_file > ${reordered_pfile} || exit 1
+reorder_pipeline_file > "${reordered_pfile}" || exit 1
 
 stepdeps_file=${outd}/.stepdeps.txt
-gen_stepdeps > ${stepdeps_file} || exit 1
+gen_stepdeps > "${stepdeps_file}" || exit 1
 
 configure_scheduler || exit 1
 
-load_modules ${reordered_pfile} || exit 1
+load_modules "${reordered_pfile}" || exit 1
 
 if [ ${showopts_given} -eq 1 ]; then
-    show_pipeline_opts ${reordered_pfile} || exit 1
+    show_pipeline_opts "${reordered_pfile}" || exit 1
 else
-    augmented_cmdline=`obtain_augmented_cmdline "${command_line}"` || exit 1
+    augmented_cmdline=$(obtain_augmented_cmdline "${command_line}") || exit 1
     
     if [ ${checkopts_given} -eq 1 ]; then
-        check_pipeline_opts "${augmented_cmdline}" ${reordered_pfile} || exit 1
+        check_pipeline_opts "${augmented_cmdline}" "${reordered_pfile}" || exit 1
     else
         load_pipeline_modules=1
-        check_pipeline_opts "${augmented_cmdline}" ${reordered_pfile} || exit 1
+        check_pipeline_opts "${augmented_cmdline}" "${reordered_pfile}" || exit 1
         
         # NOTE: exclusive execution should be ensured after creating the output directory
         ensure_exclusive_execution || { echo "Error: there was a problem while trying to ensure exclusive execution of pipe_exec" ; exit 1; }
@@ -919,27 +919,27 @@ else
         register_fifos
 
         if [ ${conda_support_given} -eq 1 ]; then
-            process_conda_requirements ${reordered_pfile} || exit 1
+            process_conda_requirements "${reordered_pfile}" || exit 1
         fi
 
-        define_forced_exec_steps ${reordered_pfile} || exit 1
+        define_forced_exec_steps "${reordered_pfile}" || exit 1
 
         if [ ${reexec_outdated_steps_given} -eq 1 ]; then
-            define_reexec_steps_due_to_code_update ${outd} ${reordered_pfile} || exit 1
+            define_reexec_steps_due_to_code_update "${outd}" "${reordered_pfile}" || exit 1
         fi
         
-        define_reexec_steps_due_to_deps ${stepdeps_file} || exit 1
+        define_reexec_steps_due_to_deps "${stepdeps_file}" || exit 1
 
         print_command_line || exit 1
 
         if [ ${debug} -eq 1 ]; then
-            execute_pipeline_steps_debug "${augmented_cmdline}" ${outd} ${reordered_pfile} || exit 1
+            execute_pipeline_steps_debug "${augmented_cmdline}" "${outd}" "${reordered_pfile}" || exit 1
         else
-            sched=`determine_scheduler`
-            if [ ${sched} = ${BUILTIN_SCHEDULER} ]; then
-                builtin_sched_execute_pipeline_steps "${augmented_cmdline}" ${outd} ${reordered_pfile} || exit 1
+            sched=$(determine_scheduler)
+            if [ "${sched}" = "${BUILTIN_SCHEDULER}" ]; then
+                builtin_sched_execute_pipeline_steps "${augmented_cmdline}" "${outd}" "${reordered_pfile}" || exit 1
             else
-                execute_pipeline_steps "${augmented_cmdline}" ${outd} ${reordered_pfile} || exit 1
+                execute_pipeline_steps "${augmented_cmdline}" "${outd}" "${reordered_pfile}" || exit 1
             fi
         fi
     fi

@@ -264,13 +264,13 @@ process_status_for_pfile()
 
             # Obtain ids
             local ids_info
-            ids_info=`read_ids_from_files ${absdirname} ${stepname}`
+            ids_info=`read_ids_from_files ${absdirname} "${stepname}"`
             
             # Print status
             echo "STEP: $stepname ; STATUS: $status ; SCHED_IDS: ${ids_info} (Stopping...)"
             stop_step "${ids_info}"
         else
-            if [ ${stepspec_comment} = "no" -a ${stepspec_ok} = "no" ]; then
+            if [ "${stepspec_comment}" = "no" -a "${stepspec_ok}" = "no" ]; then
                 echo "Error: incorrect step specification at line $lineno of ${pfile}" >&2
                 return 1
             fi
@@ -279,7 +279,7 @@ process_status_for_pfile()
         # Increase lineno
         lineno=$((lineno+1))
         
-    done < ${pfile}
+    done < "${pfile}"
 }
 
 ########
@@ -293,6 +293,6 @@ read_pars $@ || exit 1
 
 check_pars || exit 1
 
-process_status_for_pfile ${pdir} ${pfile}
+process_status_for_pfile "${pdir}" "${pfile}"
 
 exit $?

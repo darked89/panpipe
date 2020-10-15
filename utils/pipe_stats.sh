@@ -256,12 +256,12 @@ process_status_for_pfile()
             local status=`get_step_status ${absdirname} ${stepname}`
 
             # Get elapsed time if step finished
-            elapsed_time=`get_elapsed_time_for_step ${absdirname} ${stepname}`
+            elapsed_time=`get_elapsed_time_for_step ${absdirname} "${stepname}"`
             
             # Print status
             echo "STEP: $stepname ; STATUS: $status ; ELAPSED_TIME(s): ${elapsed_time}"                        
         else
-            if [ ${stepspec_comment} = "no" -a ${stepspec_ok} = "no" ]; then
+            if [ "${stepspec_comment}" = "no" -a "${stepspec_ok}" = "no" ]; then
                 echo "Error: incorrect step specification at line $lineno of ${pfile}" >&2
                 return 1
             fi
@@ -270,7 +270,7 @@ process_status_for_pfile()
         # Increase lineno
         lineno=$((lineno+1))
         
-    done < ${pfile}
+    done < "${pfile}"
 }
 
 ########
@@ -284,6 +284,6 @@ read_pars $@ || exit 1
 
 check_pars || exit 1
 
-process_status_for_pfile ${pdir} ${pfile}
+process_status_for_pfile "${pdir}" "${pfile}"
 
 exit $?

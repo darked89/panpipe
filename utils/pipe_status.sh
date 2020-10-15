@@ -269,7 +269,7 @@ process_status_for_pfile()
             # Obtain ids if requested
             local ids_info
             if [ ${i_given} -eq 1 ]; then
-                ids_info=`read_ids_from_files ${absdirname} ${stepname}`
+                ids_info=`read_ids_from_files ${absdirname} "${stepname}"`
             fi
             
             # Print status
@@ -294,7 +294,7 @@ process_status_for_pfile()
             esac
                         
         else
-            if [ ${stepspec_comment} = "no" -a ${stepspec_ok} = "no" ]; then
+            if [ "${stepspec_comment}" = "no" -a "${stepspec_ok}" = "no" ]; then
                 echo "Error: incorrect step specification at line $lineno of ${pfile}" >&2
                 return 1
             fi
@@ -303,19 +303,19 @@ process_status_for_pfile()
         # Increase lineno
         lineno=$((lineno+1))
         
-    done < ${pfile}
+    done < "${pfile}"
 
     # Print summary
     echo "* SUMMARY: num_steps= ${num_steps} ; finished= ${num_finished} ; inprogress= ${num_inprogress} ; unfinished= ${num_unfinished} ; unfinished_but_runnable= ${num_unfinished_but_runnable} ; todo= ${num_todo}" >&2
     
     # Return error if pipeline is not finished
     if [ ${num_finished} -eq ${num_steps} ]; then
-        return ${PIPELINE_FINISHED_EXIT_CODE}
+        return "${PIPELINE_FINISHED_EXIT_CODE}"
     else
         if [ ${num_inprogress} -gt 0 ]; then
-            return ${PIPELINE_IN_PROGRESS_EXIT_CODE}
+            return "${PIPELINE_IN_PROGRESS_EXIT_CODE}"
         else
-            return ${PIPELINE_UNFINISHED_EXIT_CODE}
+            return "${PIPELINE_UNFINISHED_EXIT_CODE}"
         fi
     fi
 }
@@ -331,6 +331,6 @@ read_pars $@ || exit 1
 
 check_pars || exit 1
 
-process_status_for_pfile ${pdir} ${pfile}
+process_status_for_pfile "${pdir}" "${pfile}"
 
 exit $?
