@@ -277,8 +277,8 @@ get_ppl_status()
     # Check if final output directory was provided
     if [ "${outd}" != "" ]; then
         # Get pipeline directory after moving
-        local final_outdir=`get_dest_dir_for_ppl ${pipe_cmd_outd} ${outd}`
-        if [ -d ${final_outdir} ]; then
+        local final_outdir=`get_dest_dir_for_ppl ${pipe_cmd_outd} "${outd}"`
+        if [ -d "${final_outdir}" ]; then
             # If output directory exists, it is assumed that the
             # pipeline completed execution
             return ${PPL_IS_COMPLETED}
@@ -286,14 +286,14 @@ get_ppl_status()
     fi
 
     # If original output directory exists then check pipeline status
-    if [ -d ${pipe_cmd_outd} ]; then
+    if [ -d "${pipe_cmd_outd}" ]; then
         # Obtain pipeline status
-        tmpfile=`${MKTEMP}`
-        ${panpipe_bindir}/pipe_status -d ${pipe_cmd_outd} > ${tmpfile} 2>&1
+        tmpfile=$(${MKTEMP})
+        "${panpipe_bindir}"/pipe_status -d "${pipe_cmd_outd}" > "${tmpfile}" 2>&1
         exit_code=$?
 
         # Obtain percentage of unfinished steps
-        local unfinished_step_perc=`get_unfinished_step_perc "${tmpfile}"`
+        local unfinished_step_perc=$(get_unfinished_step_perc "${tmpfile}")
         rm "${tmpfile}"
         
         # Evaluate exit code of pipe_status

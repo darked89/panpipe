@@ -215,15 +215,15 @@ process_status_for_pfile()
     
     # Get original output directory
     local orig_outdir
-    orig_outdir=`get_orig_outdir ${command_line_file}` || return 1
+    orig_outdir=`get_orig_outdir "${command_line_file}"` || return 1
 
     # Show warning if directory provided as option is different than the
     # original working directory
-    if dirnames_are_equal ${orig_outdir} ${absdirname}; then
+    if dirnames_are_equal "${orig_outdir}" "${absdirname}"; then
         local moved_outdir="no"        
     else
         echo "Warning: pipeline output directory was moved (original directory: ${orig_outdir})" >&2
-        cmdline=`replace_outdir_in_cmdline "${cmdline}" "${absdirname}"`
+        cmdline=$(replace_outdir_in_cmdline "${cmdline}" "${absdirname}")
         local moved_outdir="yes"
     fi
 

@@ -3578,7 +3578,7 @@ define_indir_opt()
     dir_exists "$value" || { errmsg "directory $value does not exist ($opt option)" ; return 1; }
 
     # Absolutize path
-    value=`get_absolute_path ${value}`
+    value=`get_absolute_path "${value}"`
 
     if [ -z "${!varname}" ]; then
         eval "${varname}='${opt} ${value}'" || { errmsg "define_indir_opt: execution error" ; return 1; }
@@ -3592,7 +3592,7 @@ get_shrdirs_funcname()
 {
     local absmodname=$1
 
-    local modname=`$BASENAME "${absmodname}"`
+    local modname=$($BASENAME "${absmodname}")
 
     echo "${modname}_shared_dirs"
 }

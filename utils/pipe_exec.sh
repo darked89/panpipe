@@ -780,8 +780,8 @@ execute_step()
         # If step is in progress, its id should be retrieved so as to
         # correctly express dependencies
         if [ "${status}" = "${INPROGRESS_STEP_STATUS}" ]; then
-            local sid_info=`read_step_id_info_from_file ${dirname} ${stepname}` || { echo "Error while retrieving id of in-progress step" >&2 ; return 1; }
-            local global_id=`get_global_id "${sid_info}"`
+            local sid_info=`read_step_id_info_from_file ${dirname} "${stepname}"` || { echo "Error while retrieving id of in-progress step" >&2 ; return 1; }
+            local global_id=$(get_global_id "${sid_info}")
             PIPE_EXEC_STEP_IDS[${stepname}]=${global_id}
             step_id_list="${step_id_list}:${PIPE_EXEC_STEP_IDS[${stepname}]}"
         fi
