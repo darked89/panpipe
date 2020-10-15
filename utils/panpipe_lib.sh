@@ -3490,8 +3490,8 @@ get_step_outdir_given_stepspec()
     local outd=${PIPELINE_OUTDIR}
 
     # Obtain output directory for step
-    local stepname=`extract_stepname_from_stepspec ${stepspec}`
-    local step_outd=`get_step_outdir ${outd} "${stepname}"`
+    local stepname=`extract_stepname_from_stepspec "${stepspec}"`
+    local step_outd=$(get_step_outdir "${outd}" "${stepname}")
 
     echo "${step_outd}"
 }

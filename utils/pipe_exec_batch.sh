@@ -157,7 +157,7 @@ absolutize_file_paths()
     fi
 
     if [ ${k_given} -eq 1 ]; then   
-        k_val=`get_absolute_path ${k_val}`
+        k_val=`get_absolute_path "${k_val}"`
     fi
 }
 
@@ -165,7 +165,7 @@ absolutize_file_paths()
 get_unfinished_step_perc()
 {
     local pipe_status_output_file=$1
-    $AWK '{if ($1=="*") printf"%d",$13*100/$4}' ${pipe_status_output_file}
+    $AWK '{if ($1=="*") printf"%d",$13*100/$4}' "${pipe_status_output_file}"
 }
 
 ########
@@ -195,13 +195,13 @@ post_ppl_finish_actions_are_executed()
     local outd=$2
 
     if [ -z "${outd}" ]; then
-        if [ -f ${pipeline_outd}/${PPL_POST_FINISH_ACTIONS_SIGNAL_FILENAME} ]; then
+        if [ -f "${pipeline_outd}"/${PPL_POST_FINISH_ACTIONS_SIGNAL_FILENAME} ]; then
             return 0
         else
             return 1
         fi
     else
-        destdir=`get_dest_dir_for_ppl ${pipeline_outd} "${outd}"`
+        destdir=$(get_dest_dir_for_ppl "${pipeline_outd}" "${outd}")
         if [ -f "${destdir}"/${PPL_POST_FINISH_ACTIONS_SIGNAL_FILENAME} ]; then
             return 0
         else

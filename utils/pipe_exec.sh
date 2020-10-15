@@ -764,9 +764,9 @@ execute_step()
         prepare_fifos_owned_by_step ${stepname}
         
         # Launch step
-        local task_array_list=`get_task_array_list ${dirname} ${stepname} ${array_size}`
-        local stepdeps_spec=`extract_stepdeps_from_stepspec "$stepspec"`
-        local stepdeps=`get_stepdeps "${step_id_list}" "${stepdeps_spec}"`
+        local task_array_list=`get_task_array_list ${dirname} ${stepname} "${array_size}"`
+        local stepdeps_spec=$(extract_stepdeps_from_stepspec "$stepspec")
+        local stepdeps=$(get_stepdeps "${step_id_list}" "${stepdeps_spec}")
         launch "${dirname}" "${stepname}" "${array_size}" "${task_array_list}" "${stepspec}" "${stepdeps}" "launch_outvar" || { echo "Error while launching step!" >&2 ; return 1; }
 
         # Update variables storing id information
