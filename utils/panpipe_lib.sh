@@ -3201,7 +3201,7 @@ read_opt_value_from_line_memoiz()
         LAST_PROC_LINE_MEMOPTS="$line"
 
         # Return result
-        _OPT_VALUE_=`read_memoized_opt_value $opt` || return 1
+        _OPT_VALUE_=`read_memoized_opt_value "$opt"` || return 1
     fi
 }
 
@@ -3326,7 +3326,7 @@ print_pipeline_opts()
                 fi
                    
                 # Print option
-                if [ -z ${PIPELINE_OPT_TYPE[$opt]} ]; then
+                if [ -z "${PIPELINE_OPT_TYPE[$opt]}" ]; then
                     echo "${opt} ${PIPELINE_OPT_DESC[$opt]}${reqflag}[${PIPELINE_OPT_STEP[$opt]}]"
                 else
                     echo "${opt} ${PIPELINE_OPT_TYPE[$opt]} ${PIPELINE_OPT_DESC[$opt]}${reqflag}[${PIPELINE_OPT_STEP[$opt]}]"
@@ -3371,11 +3371,11 @@ define_cmdline_opt()
     local varname=$3
 
     # Get value for option
-    read_opt_value_from_line_memoiz "$cmdline" $opt || { errmsg "$opt option not found" ; return 1; }
+    read_opt_value_from_line_memoiz "$cmdline" "$opt" || { errmsg "$opt option not found" ; return 1; }
     local value=${_OPT_VALUE_}
     
     # Add option
-    define_opt $opt $value $varname
+    define_opt "$opt" "$value" "$varname"
 }
 
 ########
@@ -3386,10 +3386,10 @@ define_cmdline_opt_wo_value()
     local varname=$3
 
     # Get value for option
-    check_opt_given "$cmdline" $opt || { errmsg "$opt option not found" ; return 1; }
+    check_opt_given "$cmdline" "$opt" || { errmsg "$opt option not found" ; return 1; }
 
     # Add option
-    define_opt_wo_value $opt $varname
+    define_opt_wo_value "$opt" "$varname"
 }
 
 ########
@@ -3401,15 +3401,15 @@ define_cmdline_nonmandatory_opt()
     local varname=$4
 
     # Get value for option
-    read_opt_value_from_line_memoiz "$cmdline" $opt
+    read_opt_value_from_line_memoiz "$cmdline" "$opt"
     local value=${_OPT_VALUE_}
 
-    if [ $value = ${OPT_NOT_FOUND} ]; then
+    if [ "$value" = ${OPT_NOT_FOUND} ]; then
         value=${default_value}
     fi
     
     # Add option
-    define_opt $opt $value $varname    
+    define_opt "$opt" "$value" "$varname"    
 }
 
 ########
@@ -3420,12 +3420,12 @@ define_cmdline_opt_if_given()
     local varname=$3
 
     # Get value for option
-    read_opt_value_from_line_memoiz "$cmdline" $opt
+    read_opt_value_from_line_memoiz "$cmdline" "$opt"
     local value=${_OPT_VALUE_}
 
-    if [ $value != ${OPT_NOT_FOUND} ]; then
+    if [ "$value" != ${OPT_NOT_FOUND} ]; then
         # Add option
-        define_opt $opt $value $varname
+        define_opt "$opt" "$value" "$varname"
     fi
 }
 
@@ -3437,15 +3437,15 @@ define_cmdline_infile_opt()
     local varname=$3
 
     # Get value for option
-    read_opt_value_from_line_memoiz "$cmdline" $opt || { errmsg "$opt option not found" ; return 1; }
+    read_opt_value_from_line_memoiz "$cmdline" "$opt" || { errmsg "$opt option not found" ; return 1; }
     local value=${_OPT_VALUE_}
 
-    if [ $value != ${NOFILE} ]; then
+    if [ "$value" != ${NOFILE} ]; then
         # Check if file exists
-        file_exists $value || { errmsg "file $value does not exist ($opt option)" ; return 1; }
+        file_exists "$value" || { errmsg "file $value does not exist ($opt option)" ; return 1; }
 
         # Absolutize path
-        value=`get_absolute_path "${value}"`
+        value=$(get_absolute_path "${value}")
     fi
     
     # Add option

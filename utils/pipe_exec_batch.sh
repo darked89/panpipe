@@ -17,7 +17,7 @@
 # *- bash -*
 
 # INCLUDE BASH LIBRARY
-. ${panpipe_bindir}/panpipe_lib || exit 1
+. "${panpipe_bindir}"/panpipe_lib || exit 1
 
 #############
 # CONSTANTS #
@@ -114,7 +114,7 @@ check_pars()
         echo "Error! -f parameter not given!" >&2
         exit 1
     else
-        if [ ! -f ${file} ]; then
+        if [ ! -f "${file}" ]; then
             echo "Error! file ${file} does not exist" >&2 
             exit 1
         fi
@@ -126,19 +126,19 @@ check_pars()
     fi
 
     if [ ${o_given} -eq 1 ]; then
-        if [ ! -d ${outd} ]; then
+        if [ ! -d "${outd}" ]; then
             echo "Error! output directory does not exist" >&2 
             exit 1
         fi
     fi
 
     if [ ${k_given} -eq 1 ]; then
-        if [ ! -f ${k_val} ]; then
+        if [ ! -f "${k_val}" ]; then
             echo "Error! file ${k_val} does not exist" >&2 
             exit 1
         fi
 
-        if [ ! -x ${k_val} ]; then
+        if [ ! -x "${k_val}" ]; then
             echo "Error! file ${k_val} is not executable" >&2 
             exit 1
         fi
@@ -149,7 +149,7 @@ check_pars()
 absolutize_file_paths()
 {
     if [ ${f_given} -eq 1 ]; then
-        file=`get_absolute_path "${file}"`
+        file=$(get_absolute_path "${file}")
     fi
 
     if [ ${o_given} -eq 1 ]; then   

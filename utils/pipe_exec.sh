@@ -700,8 +700,8 @@ get_stepdeps_from_detailed_spec()
     local dep_spec
     for dep_spec in ${stepdeps_spec_blanks}; do
         local deptype=`get_deptype_part_in_dep ${dep_spec}`
-        local mapped_deptype=`map_deptype_if_necessary ${deptype}`
-        local stepname=`get_stepname_part_in_dep "${dep_spec}"`
+        local mapped_deptype=`map_deptype_if_necessary "${deptype}"`
+        local stepname=$(get_stepname_part_in_dep "${dep_spec}")
         # Check if there is an id for the step
         if [ ! -z "${PIPE_EXEC_STEP_IDS[${stepname}]}" ]; then
             if [ -z "${sdeps}" ]; then

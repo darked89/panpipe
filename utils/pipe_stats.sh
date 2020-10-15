@@ -133,9 +133,9 @@ get_cmdline_pfile()
 get_sched()
 {
     local command_line_file=$1
-    local cmdline=`$TAIL -1 ${command_line_file}`
-    local sched=`read_opt_value_from_line "$cmdline" "--sched"` || return 1
-    echo $sched
+    local cmdline=`$TAIL -1 "${command_line_file}"`
+    local sched=$(read_opt_value_from_line "$cmdline" "--sched") || return 1
+    echo "$sched"
 }
 
 ########
@@ -144,7 +144,7 @@ replace_outdir_in_cmdline()
     local cmdline=$1
     local newdir=$2
 
-    echo $cmdline | $AWK -v newdir=$newdir 'BEGIN{
+    echo "$cmdline" | $AWK -v newdir="$newdir" 'BEGIN{
                                 replace=0
                                }
                                {
@@ -171,12 +171,12 @@ get_pfile()
     local absdirname=$1
     local cmdline_pfile=$2
     
-    if [ -f ${absdirname}/${REORDERED_PIPELINE_BASENAME} ]; then
-        echo ${absdirname}/${REORDERED_PIPELINE_BASENAME}
+    if [ -f "${absdirname}"/"${REORDERED_PIPELINE_BASENAME}" ]; then
+        echo "${absdirname}"/"${REORDERED_PIPELINE_BASENAME}"
         return 0
     else
-        if [ -f ${cmdline_pfile} ]; then
-            echo ${cmdline_pfile}
+        if [ -f "${cmdline_pfile}" ]; then
+            echo "${cmdline_pfile}"
             return 0
         else
             echo "Error: unable to find pipeline file (${cmdline_pfile})" >&2
@@ -189,8 +189,8 @@ get_pfile()
 configure_scheduler()
 {
     local sched=$1
-    if [ ${sched} != ${OPT_NOT_FOUND} ]; then
-        set_panpipe_scheduler ${sched} || return 1
+    if [ "${sched}" != "${OPT_NOT_FOUND}" ]; then
+        set_panpipe_scheduler "${sched}" || return 1
     fi
 }
 
@@ -198,7 +198,7 @@ configure_scheduler()
 process_status_for_pfile()
 {
     local dirname=$1
-    local absdirname=`get_absolute_path "${dirname}"`
+    local absdirname=$(get_absolute_path "${dirname}")
     local command_line_file=${absdirname}/command_line.sh
 
     # Extract information from command_line.sh file
