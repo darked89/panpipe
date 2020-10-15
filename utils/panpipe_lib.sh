@@ -3552,7 +3552,7 @@ define_infile_opt()
     file_exists $value || { errmsg "file $value does not exist ($opt option)" ; return 1; }
 
     # Absolutize path
-    value=`get_absolute_path ${value}`
+    value=`get_absolute_path "${value}"`
 
     if [ -z "${!varname}" ]; then
         eval "${varname}='${opt} ${value}'" || { errmsg "define_infile_opt: execution error" ; return 1; }
@@ -3578,7 +3578,7 @@ define_indir_opt()
     dir_exists "$value" || { errmsg "directory $value does not exist ($opt option)" ; return 1; }
 
     # Absolutize path
-    value=`get_absolute_path "${value}"`
+    value=$(get_absolute_path "${value}")
 
     if [ -z "${!varname}" ]; then
         eval "${varname}='${opt} ${value}'" || { errmsg "define_indir_opt: execution error" ; return 1; }

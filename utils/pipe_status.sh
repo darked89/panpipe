@@ -217,11 +217,11 @@ process_status_for_pfile()
 
     # Set pipeline file
     local pfile
-    pfile=`get_pfile ${absdirname} ${cmdline_pfile}` || return 1
+    pfile=`get_pfile ${absdirname} "${cmdline_pfile}"` || return 1
     
     # Get original output directory
     local orig_outdir
-    orig_outdir=`get_orig_outdir "${command_line_file}"` || return 1
+    orig_outdir=$(get_orig_outdir "${command_line_file}") || return 1
 
     # Show warning if directory provided as option is different than the
     # original working directory

@@ -219,8 +219,8 @@ signal_execution_of_post_ppl_finish_actions()
     if [ -z "${outd}" ]; then
         touch ${pipeline_outd}/${PPL_POST_FINISH_ACTIONS_SIGNAL_FILENAME}
     else
-        destdir=`get_dest_dir_for_ppl ${pipeline_outd} ${outd}`
-        touch ${destdir}/${PPL_POST_FINISH_ACTIONS_SIGNAL_FILENAME}
+        destdir=`get_dest_dir_for_ppl ${pipeline_outd} "${outd}"`
+        touch "${destdir}"/${PPL_POST_FINISH_ACTIONS_SIGNAL_FILENAME}
     fi
 }
 
@@ -239,7 +239,7 @@ exec_post_ppl_finish_actions()
     # Execute hook if requested
     if [ ${k_given} -eq 1 ]; then
         echo "- Executing hook implemented in ${k_val} for pipeline stored in ${pipeline_outd}" >&2
-        exec_hook ${pipeline_outd}
+        exec_hook "${pipeline_outd}"
         local exit_code_hook=$?
         case ${exit_code_hook} in
             0) :
@@ -255,11 +255,11 @@ exec_post_ppl_finish_actions()
     # Move directory if requested
     if [ ! -z "${outd}" ]; then
         echo "- Moving ${pipeline_outd} directory to ${outd}" >&2
-        move_dir ${pipeline_outd} ${outd} || return 1
+        move_dir "${pipeline_outd}" "${outd}" || return 1
     fi
 
     # Signal execution of post pipeline finish actions
-    signal_execution_of_post_ppl_finish_actions ${pipeline_outd} ${outd}
+    signal_execution_of_post_ppl_finish_actions "${pipeline_outd}" "${outd}"
 }
 
 ########
@@ -269,15 +269,15 @@ get_ppl_status()
     local outd=$2
 
     # Extract output directory from command
-    local pipe_cmd_outd=`read_opt_value_from_line "${pipe_exec_cmd}" "--outdir"`
-    if [ ${pipe_cmd_outd} = ${OPT_NOT_FOUND} ]; then
+    local pipe_cmd_outd=$(read_opt_value_from_line "${pipe_exec_cmd}" "--outdir")
+    if [ "${pipe_cmd_outd}" = "${OPT_NOT_FOUND}" ]; then
         return ${PPL_HAS_WRONG_OUTDIR}
     fi
 
     # Check if final output directory was provided
     if [ "${outd}" != "" ]; then
         # Get pipeline directory after moving
-        local final_outdir=`get_dest_dir_for_ppl ${pipe_cmd_outd} "${outd}"`
+        local final_outdir=$(get_dest_dir_for_ppl "${pipe_cmd_outd}" "${outd}")
         if [ -d "${final_outdir}" ]; then
             # If output directory exists, it is assumed that the
             # pipeline completed execution
