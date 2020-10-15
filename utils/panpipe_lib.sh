@@ -3473,12 +3473,12 @@ define_cmdline_infile_nonmand_opt()
         file_exists $value || { errmsg "file $value does not exist ($opt option)" ; return 1; }
         
         # Absolutize path
-        value=`get_absolute_path ${value}`
+        value=`get_absolute_path "${value}"`
     fi
 
 
     # Add option
-    define_opt $opt $value $varname
+    define_opt "$opt" "$value" "$varname"
 }
 
 ########
@@ -3490,7 +3490,7 @@ get_step_outdir_given_stepspec()
     local outd=${PIPELINE_OUTDIR}
 
     # Obtain output directory for step
-    local stepname=`extract_stepname_from_stepspec "${stepspec}"`
+    local stepname=$(extract_stepname_from_stepspec "${stepspec}")
     local step_outd=$(get_step_outdir "${outd}" "${stepname}")
 
     echo "${step_outd}"

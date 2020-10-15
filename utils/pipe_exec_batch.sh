@@ -153,11 +153,11 @@ absolutize_file_paths()
     fi
 
     if [ ${o_given} -eq 1 ]; then   
-        outd=`get_absolute_path ${outd}`
+        outd=`get_absolute_path "${outd}"`
     fi
 
     if [ ${k_given} -eq 1 ]; then   
-        k_val=`get_absolute_path "${k_val}"`
+        k_val=$(get_absolute_path "${k_val}")
     fi
 }
 

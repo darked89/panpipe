@@ -209,9 +209,9 @@ process_status_for_pfile()
     
     # Extract information from command_line.sh file
     local cmdline
-    cmdline=`get_cmdline ${command_line_file}` || return 1
+    cmdline=`get_cmdline "${command_line_file}"` || return 1
     local cmdline_pfile
-    cmdline_pfile=`get_cmdline_pfile "${command_line_file}"` || return 1
+    cmdline_pfile=$(get_cmdline_pfile "${command_line_file}") || return 1
     local sched
     sched=$(get_sched "${command_line_file}") || return 1
 

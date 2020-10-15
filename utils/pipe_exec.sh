@@ -742,7 +742,7 @@ execute_step()
     # Execute step
 
     ## Obtain step status
-    local status=`get_step_status ${dirname} ${stepname}`
+    local status=`get_step_status ${dirname} "${stepname}"`
     echo "STEP: ${stepname} ; STATUS: ${status} ; STEPSPEC: ${stepspec}" >&2
 
     ## Decide whether the step should be executed
@@ -751,20 +751,20 @@ execute_step()
         define_opts_for_script "${cmdline}" "${stepspec}" || return 1
         local script_opts_array=("${SCRIPT_OPT_LIST_ARRAY[@]}")
         local array_size=${#script_opts_array[@]}
-        create_script ${dirname} ${stepname} "script_opts_array"
+        create_script "${dirname}" "${stepname}" "script_opts_array"
 
         # Archive script
-        archive_script ${dirname} ${stepname}
+        archive_script "${dirname}" "${stepname}"
 
         # Prepare files and directories for step
-        update_step_completion_signal ${dirname} ${stepname} ${status} || { echo "Error when updating step completion signal for step" >&2 ; return 1; }
-        clean_step_log_files ${dirname} ${stepname} ${array_size} || { echo "Error when cleaning log files for step" >&2 ; return 1; }
-        clean_step_id_files ${dirname} ${stepname} ${array_size} || { echo "Error when cleaning id files for step" >&2 ; return 1; }
-        create_outdir_for_step ${dirname} ${stepname} || { echo "Error when creating output directory for step" >&2 ; return 1; }
-        prepare_fifos_owned_by_step ${stepname}
+        update_step_completion_signal "${dirname}" "${stepname}" "${status}" || { echo "Error when updating step completion signal for step" >&2 ; return 1; }
+        clean_step_log_files "${dirname}" "${stepname}" "${array_size}" || { echo "Error when cleaning log files for step" >&2 ; return 1; }
+        clean_step_id_files "${dirname}" "${stepname}" "${array_size}" || { echo "Error when cleaning id files for step" >&2 ; return 1; }
+        create_outdir_for_step "${dirname}" "${stepname}" || { echo "Error when creating output directory for step" >&2 ; return 1; }
+        prepare_fifos_owned_by_step "${stepname}"
         
         # Launch step
-        local task_array_list=`get_task_array_list ${dirname} ${stepname} "${array_size}"`
+        local task_array_list=$(get_task_array_list "${dirname}" "${stepname}" "${array_size}")
         local stepdeps_spec=$(extract_stepdeps_from_stepspec "$stepspec")
         local stepdeps=$(get_stepdeps "${step_id_list}" "${stepdeps_spec}")
         launch "${dirname}" "${stepname}" "${array_size}" "${task_array_list}" "${stepspec}" "${stepdeps}" "launch_outvar" || { echo "Error while launching step!" >&2 ; return 1; }
