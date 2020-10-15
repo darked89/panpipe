@@ -701,7 +701,7 @@ get_stepdeps_from_detailed_spec()
     for dep_spec in ${stepdeps_spec_blanks}; do
         local deptype=`get_deptype_part_in_dep ${dep_spec}`
         local mapped_deptype=`map_deptype_if_necessary ${deptype}`
-        local stepname=`get_stepname_part_in_dep ${dep_spec}`
+        local stepname=`get_stepname_part_in_dep "${dep_spec}"`
         # Check if there is an id for the step
         if [ ! -z "${PIPE_EXEC_STEP_IDS[${stepname}]}" ]; then
             if [ -z "${sdeps}" ]; then
@@ -712,7 +712,7 @@ get_stepdeps_from_detailed_spec()
         fi
     done
 
-    echo ${sdeps}
+    echo "${sdeps}"
 }
 
 ########
@@ -725,7 +725,7 @@ get_stepdeps()
                     ;;
             "none") echo ""
                     ;;
-            *) get_stepdeps_from_detailed_spec ${stepdeps_spec}
+            *) get_stepdeps_from_detailed_spec "${stepdeps_spec}"
                ;;
     esac
 }
@@ -742,7 +742,7 @@ execute_step()
     # Execute step
 
     ## Obtain step status
-    local status=`get_step_status ${dirname} "${stepname}"`
+    local status=$(get_step_status "${dirname}" "${stepname}")
     echo "STEP: ${stepname} ; STATUS: ${status} ; STEPSPEC: ${stepspec}" >&2
 
     ## Decide whether the step should be executed

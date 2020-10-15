@@ -149,11 +149,11 @@ check_pars()
 absolutize_file_paths()
 {
     if [ ${f_given} -eq 1 ]; then
-        file=`get_absolute_path ${file}`
+        file=`get_absolute_path "${file}"`
     fi
 
     if [ ${o_given} -eq 1 ]; then   
-        outd=`get_absolute_path "${outd}"`
+        outd=$(get_absolute_path "${outd}")
     fi
 
     if [ ${k_given} -eq 1 ]; then   

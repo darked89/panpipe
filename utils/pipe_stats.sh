@@ -198,12 +198,12 @@ configure_scheduler()
 process_status_for_pfile()
 {
     local dirname=$1
-    local absdirname=`get_absolute_path ${dirname}`
+    local absdirname=`get_absolute_path "${dirname}"`
     local command_line_file=${absdirname}/command_line.sh
 
     # Extract information from command_line.sh file
     local cmdline
-    cmdline=`get_cmdline "${command_line_file}"` || return 1
+    cmdline=$(get_cmdline "${command_line_file}") || return 1
     local cmdline_pfile
     cmdline_pfile=$(get_cmdline_pfile "${command_line_file}") || return 1
     local sched

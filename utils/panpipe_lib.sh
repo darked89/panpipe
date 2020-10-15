@@ -3445,11 +3445,11 @@ define_cmdline_infile_opt()
         file_exists $value || { errmsg "file $value does not exist ($opt option)" ; return 1; }
 
         # Absolutize path
-        value=`get_absolute_path ${value}`
+        value=`get_absolute_path "${value}"`
     fi
     
     # Add option
-    define_opt $opt $value $varname
+    define_opt "$opt" "$value" "$varname"
 }
 
 ########
@@ -3461,19 +3461,19 @@ define_cmdline_infile_nonmand_opt()
     local varname=$4
 
     # Get value for option
-    read_opt_value_from_line_memoiz "$cmdline" $opt
+    read_opt_value_from_line_memoiz "$cmdline" "$opt"
     local value=${_OPT_VALUE_}
 
-    if [ $value = ${OPT_NOT_FOUND} ]; then
+    if [ "$value" = ${OPT_NOT_FOUND} ]; then
         value=${default_value}
     fi
 
-    if [ $value != ${NOFILE} ]; then
+    if [ "$value" != ${NOFILE} ]; then
         # Check if file exists
-        file_exists $value || { errmsg "file $value does not exist ($opt option)" ; return 1; }
+        file_exists "$value" || { errmsg "file $value does not exist ($opt option)" ; return 1; }
         
         # Absolutize path
-        value=`get_absolute_path "${value}"`
+        value=$(get_absolute_path "${value}")
     fi
 
 
