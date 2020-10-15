@@ -229,15 +229,15 @@ process_status_for_pfile()
         local moved_outdir="no"        
     else
         echo "Warning: pipeline output directory was moved (original directory: ${orig_outdir})" >&2
-        cmdline=`replace_outdir_in_cmdline "${cmdline}" ${absdirname}`
+        cmdline=`replace_outdir_in_cmdline "${cmdline}" "${absdirname}"`
         local moved_outdir="yes"
     fi
 
     # Load pipeline modules
-    load_pipeline_modules $pfile || return 1
+    load_pipeline_modules "$pfile" || return 1
 
     # Configure scheduler
-    configure_scheduler $sched || return 1
+    configure_scheduler "$sched" || return 1
     
     # Read information about the steps to be executed
     lineno=1
@@ -248,23 +248,23 @@ process_status_for_pfile()
     num_unfinished_but_runnable=0
     num_todo=0
     while read stepspec; do
-        local stepspec_comment=`pipeline_stepspec_is_comment "$stepspec"`
-        local stepspec_ok=`pipeline_stepspec_is_ok "$stepspec"`
-        if [ ${stepspec_comment} = "no" -a ${stepspec_ok} = "yes" ]; then
+        local stepspec_comment=$(pipeline_stepspec_is_comment "$stepspec")
+        local stepspec_ok=$(pipeline_stepspec_is_ok "$stepspec")
+        if [ "${stepspec_comment}" = "no" -a "${stepspec_ok}" = "yes" ]; then
             # Increase number of steps
             num_steps=$((num_steps + 1))
             
             # Extract step information
-            local stepname=`extract_stepname_from_stepspec "$stepspec"`
+            local stepname=$(extract_stepname_from_stepspec "$stepspec")
 
             # If s option was given, continue to next iteration if step
             # name does not match with the given one
-            if [ ${s_given} -eq 1 -a "${given_stepname}" != $stepname ]; then
+            if [ ${s_given} -eq 1 -a "${given_stepname}" != "$stepname" ]; then
                 continue
             fi
 
             # Check step status
-            local status=`get_step_status ${absdirname} "${stepname}"`
+            local status=$(get_step_status "${absdirname}" "${stepname}")
 
             # Obtain ids if requested
             local ids_info

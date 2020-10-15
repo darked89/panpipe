@@ -3592,7 +3592,7 @@ get_shrdirs_funcname()
 {
     local absmodname=$1
 
-    local modname=`$BASENAME ${absmodname}`
+    local modname=`$BASENAME "${absmodname}"`
 
     echo "${modname}_shared_dirs"
 }
@@ -3604,16 +3604,16 @@ create_pipeline_shdirs()
     # modules
     local absmodname
     for absmodname in "${!PIPELINE_MODULES[@]}"; do
-        shrdirs_funcname=`get_shrdirs_funcname ${absmodname}`
+        shrdirs_funcname=$(get_shrdirs_funcname ${absmodname})
         ${shrdirs_funcname}
     done
     
     # Create shared directories
     local dirname
     for dirname in "${!PIPELINE_SHDIRS[@]}"; do
-        absdir=`get_absolute_shdirname $dirname`
-        if [ ! -d ${absdir} ]; then
-           mkdir -p ${absdir} || exit 1
+        absdir=$(get_absolute_shdirname $dirname)
+        if [ ! -d "${absdir}" ]; then
+           mkdir -p "${absdir}" || exit 1
         fi
     done
 }
@@ -3623,7 +3623,7 @@ get_fifos_funcname()
 {
     local absmodname=$1
 
-    local modname=`$BASENAME "${absmodname}"`
+    local modname=$($BASENAME "${absmodname}")
 
     echo "${modname}_fifos"
 }

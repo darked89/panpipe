@@ -293,21 +293,21 @@ get_ppl_status()
         exit_code=$?
 
         # Obtain percentage of unfinished steps
-        local unfinished_step_perc=`get_unfinished_step_perc ${tmpfile}`
-        rm ${tmpfile}
+        local unfinished_step_perc=`get_unfinished_step_perc "${tmpfile}"`
+        rm "${tmpfile}"
         
         # Evaluate exit code of pipe_status
         case $exit_code in
-            ${PIPELINE_FINISHED_EXIT_CODE}) if post_ppl_finish_actions_are_executed ${pipe_cmd_outd}; then
+            ${PIPELINE_FINISHED_EXIT_CODE}) if post_ppl_finish_actions_are_executed "${pipe_cmd_outd}"; then
                                                 return ${PPL_IS_COMPLETED}
                                             else
                                                 return ${PPL_REQUIRES_POST_FINISH_ACTIONS}
                                             fi
                                             ;;
-            ${PIPELINE_UNFINISHED_EXIT_CODE}) if [ ${unfinished_step_perc} -gt ${max_unfinished_step_perc} ]; then
+            ${PIPELINE_UNFINISHED_EXIT_CODE}) if [ "${unfinished_step_perc}" -gt "${max_unfinished_step_perc}" ]; then
                                                   return ${PPL_FAILED}
                                               else
-                                                  if post_ppl_finish_actions_are_executed ${pipe_cmd_outd}; then
+                                                  if post_ppl_finish_actions_are_executed "${pipe_cmd_outd}"; then
                                                       return ${PPL_IS_COMPLETED}
                                                   else
                                                       return ${PPL_REQUIRES_POST_FINISH_ACTIONS}
@@ -339,7 +339,7 @@ wait_simul_exec_reduction()
             local pipe_exec_cmd=${PIPELINE_COMMANDS[${pipeline_outd}]}
 
             # Check if pipeline has completed execution
-            get_ppl_status "${pipe_exec_cmd}" ${outd}
+            get_ppl_status "${pipe_exec_cmd}" "${outd}"
             local exit_code=$?
             case $exit_code in
                 ${PPL_HAS_WRONG_OUTDIR}) echo "Error: pipeline command does not contain --outdir option">&2
@@ -347,7 +347,7 @@ wait_simul_exec_reduction()
                                          ;;
                 ${PPL_IS_COMPLETED}) num_completed_pipelines=$((num_completed_pipelines+1))
                                      ;;
-                ${PPL_REQUIRES_POST_FINISH_ACTIONS}) exec_post_ppl_finish_actions ${pipeline_outd} ${outd}
+                ${PPL_REQUIRES_POST_FINISH_ACTIONS}) exec_post_ppl_finish_actions "${pipeline_outd}" "${outd}"
                                                      local exit_code_post_comp_actions=$?
                                                      case $exit_code_post_comp_actions in
                                                          0) :
@@ -368,14 +368,14 @@ wait_simul_exec_reduction()
 
         # Decide whether to wait or end the loop
         if [ ${num_pending_pipelines} -eq ${num_failed_pipelines} ]; then
-            if [ ${num_pending_pipelines} -ge ${maxp} ]; then
+            if [ ${num_pending_pipelines} -ge "${maxp}" ]; then
                 echo "Error: all pending pipelines failed and maximum capacity was reached" >&2
                 return 1
             else
                 end=1
             fi
         else
-            if [ ${num_pending_pipelines} -lt ${maxp} ]; then
+            if [ ${num_pending_pipelines} -lt "${maxp}" ]; then
                 end=1
             fi
         fi
@@ -393,7 +393,7 @@ get_dest_dir_for_ppl()
 {
     local pipeline_outd=$1
     local outd=$2    
-    basedir=`$BASENAME "${pipeline_outd}"`
+    basedir=$($BASENAME "${pipeline_outd}")
     echo "${outd}"/"${basedir}"
 }
 

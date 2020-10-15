@@ -781,7 +781,7 @@ execute_step()
         # correctly express dependencies
         if [ "${status}" = "${INPROGRESS_STEP_STATUS}" ]; then
             local sid_info=`read_step_id_info_from_file ${dirname} ${stepname}` || { echo "Error while retrieving id of in-progress step" >&2 ; return 1; }
-            local global_id=`get_global_id ${sid_info}`
+            local global_id=`get_global_id "${sid_info}"`
             PIPE_EXEC_STEP_IDS[${stepname}]=${global_id}
             step_id_list="${step_id_list}:${PIPE_EXEC_STEP_IDS[${stepname}]}"
         fi
@@ -804,15 +804,15 @@ execute_pipeline_steps()
     # Read information about the steps to be executed
     local stepspec
     while read stepspec; do
-        local stepspec_comment=`pipeline_stepspec_is_comment "$stepspec"`
-        local stepspec_ok=`pipeline_stepspec_is_ok "$stepspec"`
-        if [ ${stepspec_comment} = "no" -a ${stepspec_ok} = "yes" ]; then
+        local stepspec_comment=$(pipeline_stepspec_is_comment "$stepspec")
+        local stepspec_ok=$(pipeline_stepspec_is_ok "$stepspec")
+        if [ "${stepspec_comment}" = "no" -a "${stepspec_ok}" = "yes" ]; then
             # Extract step name
-            local stepname=`extract_stepname_from_stepspec "$stepspec"`
+            local stepname=$(extract_stepname_from_stepspec "$stepspec")
 
-            execute_step "${cmdline}" ${dirname} ${stepname} "${stepspec}" || return 1
+            execute_step "${cmdline}" "${dirname}" "${stepname}" "${stepspec}" || return 1
         fi
-    done < ${pfile}
+    done < "${pfile}"
 
     echo "" >&2
 }
@@ -829,7 +829,7 @@ debug_step()
     # Debug step
 
     ## Obtain step status
-    local status=`get_step_status ${dirname} "${stepname}"`
+    local status=$(get_step_status "${dirname}" "${stepname}")
     echo "STEP: ${stepname} ; STATUS: ${status} ; STEPSPEC: ${stepspec}" >&2
 
     ## Obtain step options
