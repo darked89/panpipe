@@ -253,10 +253,10 @@ process_status_for_pfile()
             fi
 
             # Check step status
-            local status=`get_step_status ${absdirname} ${stepname}`
+            local status=`get_step_status ${absdirname} "${stepname}"`
 
             # Get elapsed time if step finished
-            elapsed_time=`get_elapsed_time_for_step ${absdirname} "${stepname}"`
+            elapsed_time=$(get_elapsed_time_for_step "${absdirname}" "${stepname}")
             
             # Print status
             echo "STEP: $stepname ; STATUS: $status ; ELAPSED_TIME(s): ${elapsed_time}"                        

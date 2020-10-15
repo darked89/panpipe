@@ -829,11 +829,11 @@ debug_step()
     # Debug step
 
     ## Obtain step status
-    local status=`get_step_status ${dirname} ${stepname}`
+    local status=`get_step_status ${dirname} "${stepname}"`
     echo "STEP: ${stepname} ; STATUS: ${status} ; STEPSPEC: ${stepspec}" >&2
 
     ## Obtain step options
-    local define_opts_funcname=`get_define_opts_funcname "${stepname}"`
+    local define_opts_funcname=$(get_define_opts_funcname "${stepname}")
     ${define_opts_funcname} "${cmdline}" "${stepspec}" || return 1
 }
 

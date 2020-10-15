@@ -3623,7 +3623,7 @@ get_fifos_funcname()
 {
     local absmodname=$1
 
-    local modname=`$BASENAME ${absmodname}`
+    local modname=`$BASENAME "${absmodname}"`
 
     echo "${modname}_fifos"
 }
@@ -3634,7 +3634,7 @@ register_pipeline_fifos()
     # Populate associative array of FIFOS for the loaded modules
     local absmodname
     for absmodname in "${!PIPELINE_MODULES[@]}"; do
-        fifos_funcname=`get_fifos_funcname ${absmodname}`
+        fifos_funcname=$(get_fifos_funcname ${absmodname})
         ${fifos_funcname}
     done
 }
@@ -3645,14 +3645,14 @@ prepare_fifos_owned_by_step()
     local stepname=$1
 
     # Obtain name of directory for FIFOS
-    local fifodir=`get_absolute_fifoname`
+    local fifodir=$(get_absolute_fifoname)
 
     # Create FIFOS
     local fifoname
     for fifoname in "${!PIPELINE_FIFOS[@]}"; do
-        if [ ${PIPELINE_FIFOS[${fifoname}]} = "${stepname}" ]; then         
-            rm -f ${fifodir}/${fifoname} || exit 1
-            $MKFIFO ${fifodir}/${fifoname} || exit 1
+        if [ "${PIPELINE_FIFOS[${fifoname}]}" = "${stepname}" ]; then         
+            rm -f "${fifodir}"/"${fifoname}" || exit 1
+            $MKFIFO "${fifodir}"/"${fifoname}" || exit 1
         fi
     done
 }
@@ -3661,20 +3661,20 @@ prepare_fifos_owned_by_step()
 get_absolute_shdirname()
 {
     local shdirname=$1
-    echo ${PIPELINE_OUTDIR}/${shdirname}
+    echo "${PIPELINE_OUTDIR}"/"${shdirname}"
 }
 
 ########
 get_absolute_fifoname()
 {
     local fifoname=$1
-    echo ${PIPELINE_OUTDIR}/.fifos/${fifoname}
+    echo "${PIPELINE_OUTDIR}"/.fifos/"${fifoname}"
 }
 
 ########
 get_absolute_condadir()
 {
-    echo ${PIPELINE_OUTDIR}/.conda
+    echo "${PIPELINE_OUTDIR}"/.conda
 }
 
 ########
@@ -3697,7 +3697,7 @@ cfgfile_to_string()
     local str=""
 
     # Check that the cfg file exists
-    if [ ! -f ${cfgfile} ]; then
+    if [ ! -f "${cfgfile}" ]; then
         return 1
     fi
 
@@ -3718,9 +3718,9 @@ cfgfile_to_string()
                 str="${str} ${field}"
             fi
         done
-    done < ${cfgfile}
+    done < "${cfgfile}"
 
-    echo ${str}
+    echo "${str}"
 
     return 0
 }
@@ -3745,7 +3745,7 @@ conda_env_exists()
 
     local env_exists=1
     
-    conda activate $envname > /dev/null 2>&1 || env_exists=0
+    conda activate "$envname" > /dev/null 2>&1 || env_exists=0
 
     if [ ${env_exists} -eq 1 ]; then
         conda deactivate
@@ -3762,19 +3762,19 @@ conda_env_prepare()
     local abs_yml_fname=$2
     local condadir=$3
 
-    if is_absolute_path ${env_name}; then
+    if is_absolute_path "${env_name}"; then
         # Install packages given prefix name
-        conda env create -f ${abs_yml_fname} -p ${env_name} > ${condadir}/${env_name}.log 2>&1 || { echo "Error while preparing conda environment ${env_name} from ${abs_yml_fname} file. See ${condadir}/${env_name}.log file for more information">&2 ; return 1; }
+        conda env create -f "${abs_yml_fname}" -p "${env_name}" > "${condadir}"/"${env_name}".log 2>&1 || { echo "Error while preparing conda environment ${env_name} from ${abs_yml_fname} file. See ${condadir}/${env_name}.log file for more information">&2 ; return 1; }
     else    
         # Install packages given environment name
-        conda env create -f ${abs_yml_fname} -n ${env_name} > ${condadir}/${env_name}.log 2>&1 || { echo "Error while preparing conda environment ${env_name} from ${abs_yml_fname} file. See ${condadir}/${env_name}.log file for more information">&2 ; return 1; }
+        conda env create -f "${abs_yml_fname}" -n "${env_name}" > "${condadir}"/"${env_name}".log 2>&1 || { echo "Error while preparing conda environment ${env_name} from ${abs_yml_fname} file. See ${condadir}/${env_name}.log file for more information">&2 ; return 1; }
     fi
 }
 
 ########
 get_panpipe_yml_dir()
 {
-    echo ${panpipe_datadir}/conda_envs
+    echo "${panpipe_datadir}"/conda_envs
 }
 
 ########
@@ -3783,7 +3783,7 @@ get_abs_yml_fname()
     local yml_fname=$1
     
     # Search module in directories listed in PANPIPE_YML_DIR
-    local PANPIPE_YML_DIR_BLANKS=`replace_str_elem_sep_with_blank "," "${PANPIPE_YML_DIR}"`
+    local PANPIPE_YML_DIR_BLANKS=$(replace_str_elem_sep_with_blank "," "${PANPIPE_YML_DIR}")
     local dir
     local abs_yml_fname
     for dir in ${PANPIPE_YML_DIR_BLANKS}; do

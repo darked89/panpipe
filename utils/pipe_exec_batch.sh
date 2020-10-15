@@ -393,8 +393,8 @@ get_dest_dir_for_ppl()
 {
     local pipeline_outd=$1
     local outd=$2    
-    basedir=`$BASENAME ${pipeline_outd}`
-    echo ${outd}/${basedir}
+    basedir=`$BASENAME "${pipeline_outd}"`
+    echo "${outd}"/"${basedir}"
 }
 
 ########
@@ -402,7 +402,7 @@ move_dir()
 {
     local pipeline_outd=$1
     local outd=$2    
-    destdir=`get_dest_dir_for_ppl ${pipeline_outd} "${outd}"`
+    destdir=$(get_dest_dir_for_ppl "${pipeline_outd}" "${outd}")
     
     # Move directory
     if [ -d "${destdir}" ]; then

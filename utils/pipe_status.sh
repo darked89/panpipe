@@ -264,12 +264,12 @@ process_status_for_pfile()
             fi
 
             # Check step status
-            local status=`get_step_status ${absdirname} ${stepname}`
+            local status=`get_step_status ${absdirname} "${stepname}"`
 
             # Obtain ids if requested
             local ids_info
             if [ ${i_given} -eq 1 ]; then
-                ids_info=`read_ids_from_files ${absdirname} "${stepname}"`
+                ids_info=$(read_ids_from_files "${absdirname}" "${stepname}")
             fi
             
             # Print status

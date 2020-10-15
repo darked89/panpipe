@@ -260,11 +260,11 @@ process_status_for_pfile()
             fi
 
             # Check step status
-            local status=`get_step_status ${absdirname} ${stepname}`
+            local status=`get_step_status ${absdirname} "${stepname}"`
 
             # Obtain ids
             local ids_info
-            ids_info=`read_ids_from_files ${absdirname} "${stepname}"`
+            ids_info=$(read_ids_from_files "${absdirname}" "${stepname}")
             
             # Print status
             echo "STEP: $stepname ; STATUS: $status ; SCHED_IDS: ${ids_info} (Stopping...)"
