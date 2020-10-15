@@ -201,8 +201,8 @@ post_ppl_finish_actions_are_executed()
             return 1
         fi
     else
-        destdir=`get_dest_dir_for_ppl ${pipeline_outd} ${outd}`
-        if [ -f ${destdir}/${PPL_POST_FINISH_ACTIONS_SIGNAL_FILENAME} ]; then
+        destdir=`get_dest_dir_for_ppl ${pipeline_outd} "${outd}"`
+        if [ -f "${destdir}"/${PPL_POST_FINISH_ACTIONS_SIGNAL_FILENAME} ]; then
             return 0
         else
             return 1
@@ -217,9 +217,9 @@ signal_execution_of_post_ppl_finish_actions()
     local outd=$2
 
     if [ -z "${outd}" ]; then
-        touch ${pipeline_outd}/${PPL_POST_FINISH_ACTIONS_SIGNAL_FILENAME}
+        touch "${pipeline_outd}"/${PPL_POST_FINISH_ACTIONS_SIGNAL_FILENAME}
     else
-        destdir=`get_dest_dir_for_ppl ${pipeline_outd} "${outd}"`
+        destdir=$(get_dest_dir_for_ppl "${pipeline_outd}" "${outd}")
         touch "${destdir}"/${PPL_POST_FINISH_ACTIONS_SIGNAL_FILENAME}
     fi
 }

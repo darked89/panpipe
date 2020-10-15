@@ -213,11 +213,11 @@ process_status_for_pfile()
     local cmdline_pfile
     cmdline_pfile=`get_cmdline_pfile ${command_line_file}` || return 1
     local sched
-    sched=`get_sched ${command_line_file}` || return 1
+    sched=`get_sched "${command_line_file}"` || return 1
 
     # Set pipeline file
     local pfile
-    pfile=`get_pfile ${absdirname} "${cmdline_pfile}"` || return 1
+    pfile=$(get_pfile "${absdirname}" "${cmdline_pfile}") || return 1
     
     # Get original output directory
     local orig_outdir

@@ -3491,9 +3491,9 @@ get_step_outdir_given_stepspec()
 
     # Obtain output directory for step
     local stepname=`extract_stepname_from_stepspec ${stepspec}`
-    local step_outd=`get_step_outdir ${outd} ${stepname}`
+    local step_outd=`get_step_outdir ${outd} "${stepname}"`
 
-    echo ${step_outd}
+    echo "${step_outd}"
 }
 
 ########
@@ -3549,10 +3549,10 @@ define_infile_opt()
     fi
 
     # Check if file exists
-    file_exists $value || { errmsg "file $value does not exist ($opt option)" ; return 1; }
+    file_exists "$value" || { errmsg "file $value does not exist ($opt option)" ; return 1; }
 
     # Absolutize path
-    value=`get_absolute_path "${value}"`
+    value=$(get_absolute_path "${value}")
 
     if [ -z "${!varname}" ]; then
         eval "${varname}='${opt} ${value}'" || { errmsg "define_infile_opt: execution error" ; return 1; }
